@@ -1,0 +1,227 @@
+
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TUG OF WAR — Battle of Brains</title>
+<style>
+:root{--red:#e33d4c;--blue:#2878e8;--ink:#17233d;--muted:#64748b;--gold:#ffd45c;--panel:#ffffffed}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:radial-gradient(circle at 15% 10%,#dff5ff,transparent 32%),radial-gradient(circle at 90% 20%,#ffe7d4,transparent 30%),linear-gradient(145deg,#e9f2ff,#f7f8ff 55%,#e4f8ee);min-height:100vh}
+button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-radius:13px;padding:11px 16px;font-weight:800;background:#263c68;color:white;box-shadow:0 4px 0 #172747;transition:.12s}button:active{transform:translateY(3px);box-shadow:0 1px 0 #172747}button.secondary{background:#e8eef8;color:#263c68;box-shadow:0 4px 0 #c5d1e4}button.red{background:var(--red);box-shadow:0 4px 0 #a92738}button.blue{background:var(--blue);box-shadow:0 4px 0 #1652a8}button.green{background:#16a36a;box-shadow:0 4px 0 #08784b}button:disabled{opacity:.45;cursor:not-allowed}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px clamp(14px,4vw,42px);color:white;background:linear-gradient(100deg,#172747,#254b7e);box-shadow:0 8px 24px #15294b33}
+.brand{display:flex;align-items:center;gap:12px}.logo{font-size:34px;filter:drop-shadow(0 3px 1px #0004)}h1{font-size:clamp(19px,3vw,28px);margin:0;letter-spacing:.5px}.tag{font-size:12px;color:#d8e7ff;margin-top:2px}.top-actions{display:flex;gap:8px;flex-wrap:wrap}
+main{max-width:1400px;margin:auto;padding:22px clamp(12px,3vw,32px) 50px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.tab{background:#fff;color:#34476a;box-shadow:0 3px 0 #d4deec}.tab.active{background:#263c68;color:#fff;box-shadow:0 3px 0 #172747}
+.view{display:none}.view.active{display:block}.card{background:var(--panel);border:1px solid #ffffff;border-radius:20px;padding:18px;box-shadow:0 12px 35px #263d6415;backdrop-filter:blur(8px)}.grid{display:grid;grid-template-columns:1.3fr .7fr;gap:16px}.section-title{font-size:18px;font-weight:900;margin:0 0 12px}.muted{color:var(--muted);font-size:13px}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.field{display:flex;flex-direction:column;gap:5px;margin:8px 0}.field label{font-size:12px;font-weight:800;color:#51617c}.field input,.field textarea,.field select{border:1px solid #cbd6e6;border-radius:11px;padding:10px 12px;background:white;color:#17233d;min-width:0}.field textarea{min-height:100px;resize:vertical}.field input:focus,.field textarea:focus{outline:3px solid #9ec5ff66;border-color:#4385df}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.arena{position:relative;overflow:hidden;border-radius:24px;padding:18px 16px 20px;background:linear-gradient(#8bd7ff 0 52%,#77c96e 52% 100%);box-shadow:inset 0 -9px 0 #4b9b54,0 12px 25px #27476a22;min-height:310px}
+.cloud{position:absolute;top:20px;left:10%;font-size:35px;opacity:.8}.sun{position:absolute;right:8%;top:18px;font-size:40px}
+.arena-title{position:relative;text-align:center;font-weight:1000;color:#16456a;text-shadow:0 2px #fff8;font-size:clamp(17px,2.4vw,25px);z-index:1}
+.teamline{display:grid;grid-template-columns:1fr 1fr;gap:10px;position:relative;z-index:2;margin-top:16px}
+.team{border-radius:17px;padding:10px;color:white;text-align:center;box-shadow:inset 0 -5px 0 #0002,0 6px 12px #16314b25;min-height:92px}.team.redteam{background:linear-gradient(145deg,#ff6d75,#c9233c)}.team.blueteam{background:linear-gradient(145deg,#56a8ff,#1453b8)}.team h3{margin:0;font-size:16px}.score{font-size:28px;font-weight:1000;line-height:1.15}.team small{font-size:11px;opacity:.95}
+.rope-zone{position:relative;height:112px;margin:4px 0 0;display:flex;align-items:center;justify-content:center;z-index:3}
+.rope{position:relative;width:82%;height:13px;border-radius:20px;background:repeating-linear-gradient(0deg,#c28b4c 0 3px,#e9bd7d 3px 6px);box-shadow:0 4px 0 #80552e,0 8px 10px #24411c55;transition:transform .75s cubic-bezier(.2,.8,.2,1)}
+.rope:before,.rope:after{content:"";position:absolute;top:-7px;width:24px;height:27px;border-radius:50%;background:#b67b3d;border:4px solid #f1c98e}.rope:before{left:0}.rope:after{right:0}
+.knot{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:27px;height:27px;border:5px solid #fff4;border-radius:50%;background:#ffda67;box-shadow:0 2px 4px #513719}
+.flag{position:absolute;left:50%;top:-35px;height:83px;width:3px;background:#f8fafc;transform:translateX(-50%);box-shadow:1px 0 2px #555}.flag:after{content:"⚑";position:absolute;top:-12px;left:1px;font-size:24px;color:#ffe26c;text-shadow:1px 2px #885c17}
+.pull-label{position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:900;color:#16456a;background:#ffffffb8;padding:4px 9px;border-radius:20px;white-space:nowrap}
+.players{display:flex;justify-content:space-between;gap:8px;margin-top:3px;position:relative;z-index:2}.player-group{display:flex;gap:4px;align-items:end;max-width:46%;flex-wrap:wrap}.avatar{font-size:25px;filter:drop-shadow(0 3px 1px #2345);animation:bob 1.8s infinite ease-in-out}.player-group.right{justify-content:flex-end}@keyframes bob{50%{transform:translateY(-5px)}}.ground{position:absolute;bottom:0;left:0;right:0;height:18px;background:#55a95b}
+.question-card{margin-top:15px;background:white;border-radius:18px;padding:16px;box-shadow:0 7px 18px #1e3a5b18}.qtop{display:flex;justify-content:space-between;gap:8px;align-items:center}.pill{border-radius:30px;padding:5px 10px;font-size:11px;font-weight:900;background:#edf3fc;color:#38527a}.question{font-size:clamp(16px,2vw,21px);font-weight:900;margin:13px 0}.answers{display:grid;grid-template-columns:1fr 1fr;gap:9px}.answer{background:#f1f5fb;color:#243957;box-shadow:0 3px 0 #d4deeb;text-align:left;border:2px solid transparent}.answer.chosen{border-color:#387fe1;background:#e6f1ff}.answer.correct{background:#d8f8e8;border-color:#1da66b}.answer.wrong{background:#ffe0e2;border-color:#e34b5b}.feedback{font-weight:800;margin-top:10px;min-height:22px}.turnbar{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:12px 0;color:#415474;font-size:13px;font-weight:800}
+.member-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.member{background:#edf2fa;border-radius:20px;padding:5px 9px;font-size:12px;font-weight:700}.member.active{background:#fff0b8;color:#7b5100;outline:2px solid #ffd45c}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:9px 7px;border-bottom:1px solid #e5ebf3}th{color:#65748d;font-size:11px;text-transform:uppercase}.status{font-weight:900}
+.notice{padding:11px 13px;background:#fff7df;border:1px solid #ffe5a0;border-radius:12px;color:#745313;font-size:12px;line-height:1.5}.winner{position:fixed;inset:0;background:#101c36c9;display:none;place-items:center;z-index:20;padding:18px}.winner.show{display:grid}.winnerbox{max-width:500px;width:100%;background:linear-gradient(145deg,#fff,#fff4d8);padding:28px;border-radius:25px;text-align:center;box-shadow:0 25px 80px #0005;animation:pop .35s ease}.winnerbox .cup{font-size:70px}@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.timer{font-variant-numeric:tabular-nums;font-size:17px;font-weight:1000;color:#d14b43}.timer.urgent{animation:pulse .5s infinite alternate}@keyframes pulse{to{transform:scale(1.12);color:#a00018}}
+.small{font-size:11px}.hide{display:none!important}.foot{text-align:center;color:#6d7d96;font-size:11px;margin-top:22px}
+@media(max-width:850px){.grid{grid-template-columns:1fr}.arena{min-height:280px}.top-actions button{padding:8px 10px;font-size:12px}}
+@media(max-width:520px){header{align-items:flex-start}.top-actions{max-width:120px}.two{grid-template-columns:1fr}.answers{grid-template-columns:1fr}.teamline{gap:6px}.team{padding:8px}.rope{width:76%}.player-group{max-width:48%}.avatar{font-size:20px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="brand"><div class="logo">🏆</div><div><h1>TUG OF WAR</h1><div class="tag">BATTLE OF BRAINS · Jawab Benar, Tarik Lebih Kuat!</div></div></div>
+ <div class="top-actions"><button class="secondary" id="soundBtn" title="Suara">🔊 Suara</button><button id="fullscreenBtn">⛶ Layar penuh</button></div>
+</header>
+<main>
+ <nav class="tabs">
+  <button class="tab active" data-tab="game">🎮 Arena Game</button>
+  <button class="tab" data-tab="teacher">🧑‍🏫 Panel Guru</button>
+  <button class="tab" data-tab="results">📊 Hasil</button>
+ </nav>
+ <section id="game" class="view active">
+  <div class="grid">
+   <div>
+    <div class="arena">
+     <div class="cloud">☁️</div><div class="sun">☀️</div>
+     <div class="arena-title">⚡ ARENA TARIK TAMBANG ⚡</div>
+     <div class="teamline">
+      <div class="team redteam"><h3>🔴 TIM MERAH</h3><div class="score" id="redScore">0</div><small id="redCount">0 anggota</small></div>
+      <div class="team blueteam"><h3>🔵 TIM BIRU</h3><div class="score" id="blueScore">0</div><small id="blueCount">0 anggota</small></div>
+     </div>
+     <div class="rope-zone"><div class="flag"></div><div class="rope" id="rope"><div class="knot"></div></div><div class="pull-label" id="ropeLabel">POSISI SEIMBANG</div></div>
+     <div class="players"><div class="player-group" id="redAvatars"></div><div class="player-group right" id="blueAvatars"></div></div>
+     <div class="ground"></div>
+    </div>
+    <div class="turnbar"><span id="roundLabel">Belum dimulai</span><span id="turnLabel">Atur pemain melalui Panel Guru</span><span class="timer" id="timer">⏱ --</span></div>
+    <div class="question-card">
+     <div class="qtop"><span class="pill" id="teamTurn">MENUNGGU PERMAINAN</span><span class="pill" id="qCounter">Soal 0/0</span></div>
+     <div class="question" id="questionText">Selamat datang di TUG OF WAR! Guru, siapkan pemain dan soal melalui Panel Guru.</div>
+     <div class="answers" id="answers"><button class="answer" disabled>Jawaban A</button><button class="answer" disabled>Jawaban B</button><button class="answer" disabled>Jawaban C</button><button class="answer" disabled>Jawaban D</button></div>
+     <div class="feedback" id="feedback"></div>
+    </div>
+   </div>
+   <aside class="card">
+    <h2 class="section-title">📣 Giliran Pemain</h2>
+    <div class="notice">Pemain yang namanya muncul maju ke depan atau menjawab melalui perangkat siswa. Setiap jawaban benar memberi <b>10 poin tarikan</b>.</div>
+    <div style="margin-top:15px"><div class="muted">Pemain berikutnya</div><h2 id="currentPlayer" style="margin:4px 0 2px">—</h2><div class="muted" id="currentTeam">Belum ada pemain</div></div>
+    <div class="member-list" id="turnQueue"></div>
+    <hr style="border:0;border-top:1px solid #e7edf5;margin:17px 0">
+    <h3 class="section-title">🏁 Target kemenangan</h3>
+    <div class="muted">Tim pertama yang mencapai batas tarikan akan menjadi juara.</div>
+    <div style="font-size:30px;font-weight:1000;margin-top:5px" id="targetDisplay">50 poin</div>
+    <button class="green" style="width:100%;margin-top:14px" id="nextBtn" disabled>Soal berikutnya ➜</button>
+    <button class="secondary" style="width:100%;margin-top:10px" id="skipBtn" disabled>Lewati soal</button>
+   </aside>
+  </div>
+ </section>
+ <section id="teacher" class="view">
+  <div class="grid">
+   <div class="card">
+    <h2 class="section-title">🧑‍🏫 Pengaturan Pertandingan</h2>
+    <div class="two">
+     <div class="field"><label>NAMA KELAS</label><input id="className" value="Kelas VII"></div>
+     <div class="field"><label>TARGET POIN KEMENANGAN</label><input id="target" type="number" min="10" step="10" value="50"></div>
+     <div class="field"><label>WAKTU MENJAWAB (DETIK)</label><input id="seconds" type="number" min="5" max="120" value="15"></div>
+     <div class="field"><label>JUMLAH SOAL</label><select id="questionLimit"><option value="all">Semua soal</option><option>10</option><option>20</option><option>30</option><option>40</option></select></div>
+    </div>
+    <div class="field"><label>DAFTAR NAMA SISWA (satu nama per baris)</label><textarea id="students" placeholder="Andi&#10;Budi&#10;Citra&#10;Dewi"></textarea></div>
+    <div class="row"><button id="randomizeBtn">🎲 Acak Tim Merah & Biru</button><button class="secondary" id="sampleStudents">Isi contoh 32 siswa</button></div>
+    <div class="two" style="margin-top:15px">
+     <div><h3 style="color:#d32f43">🔴 Tim Merah <span id="redMembersTotal"></span></h3><div id="redMembers" class="member-list"></div></div>
+     <div><h3 style="color:#246bd1">🔵 Tim Biru <span id="blueMembersTotal"></span></h3><div id="blueMembers" class="member-list"></div></div>
+    </div>
+    <div class="row" style="margin-top:18px"><button class="green" id="startBtn">🚩 Mulai Pertandingan</button><button class="secondary" id="resetBtn">Reset pertandingan</button></div>
+   </div>
+   <div class="card">
+    <h2 class="section-title">📝 Bank Soal Kustom</h2>
+    <p class="muted">Tambahkan pertanyaan sendiri. Format: pertanyaan, pilihan A-D, lalu huruf jawaban benar.</p>
+    <div class="field"><label>PERTANYAAN</label><textarea id="newQuestion" placeholder="Contoh: Perangkat yang menjadi otak komputer adalah ..."></textarea></div>
+    <div class="two">
+     <div class="field"><label>JAWABAN A</label><input id="optA" placeholder="Monitor"></div>
+     <div class="field"><label>JAWABAN B</label><input id="optB" placeholder="Keyboard"></div>
+     <div class="field"><label>JAWABAN C</label><input id="optC" placeholder="Processor"></div>
+     <div class="field"><label>JAWABAN D</label><input id="optD" placeholder="Mouse"></div>
+    </div>
+    <div class="field"><label>KUNCI JAWABAN</label><select id="correct"><option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option></select></div>
+    <button id="addQuestion">＋ Tambahkan Soal</button>
+    <div style="margin-top:15px;display:flex;justify-content:space-between;align-items:center"><b>Bank soal (<span id="bankCount">0</span>)</b><button class="secondary small" id="restoreQuestions">Pulihkan soal contoh</button></div>
+    <div id="questionBank" style="max-height:250px;overflow:auto;margin-top:8px"></div>
+   </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+   <h2 class="section-title">📱 Mode Campuran: Layar Guru + Perangkat Siswa</h2>
+   <div class="notice"><b>Mode yang langsung aktif:</b> layar utama guru/proyektor dan giliran menjawab di perangkat yang sama (atau siswa maju ke depan). Agar HP siswa yang berbeda dapat mengirim jawaban secara langsung, aplikasi perlu dipasang pada hosting dan dihubungkan ke layanan database realtime (misalnya Firebase). File mandiri ini belum mengirim jawaban antarperangkat.</div>
+   <div class="field"><label>PETUNJUK UNTUK SISWA</label><input value="Lihat nama yang mendapat giliran, lalu pilih jawaban pada layar utama." readonly></div>
+  </div>
+ </section>
+ <section id="results" class="view">
+  <div class="card">
+   <h2 class="section-title">📊 Rekap Hasil Pertandingan</h2>
+   <div class="two">
+    <div class="team redteam"><h3>🔴 TIM MERAH</h3><div class="score" id="resultRed">0</div><small id="resultRedCorrect">0 jawaban benar</small></div>
+    <div class="team blueteam"><h3>🔵 TIM BIRU</h3><div class="score" id="resultBlue">0</div><small id="resultBlueCorrect">0 jawaban benar</small></div>
+   </div>
+   <h3 style="margin-top:22px">Kontribusi Pemain</h3>
+   <div style="overflow:auto"><table><thead><tr><th>Nama</th><th>Tim</th><th>Benar</th><th>Kesempatan</th><th>Akurasi</th></tr></thead><tbody id="resultRows"><tr><td colspan="5" class="muted">Belum ada data pertandingan.</td></tr></tbody></table></div>
+   <div class="row" style="margin-top:15px"><button class="secondary" id="exportBtn">⬇ Unduh hasil CSV</button><button id="playAgainBtn">Main lagi</button></div>
+  </div>
+ </section>
+ <div class="foot">TUG OF WAR · BATTLE OF BRAINS · Game edukasi untuk pembelajaran SMP</div>
+</main>
+<div class="winner" id="winnerModal"><div class="winnerbox"><div class="cup">🏆</div><div class="muted">SELAMAT KEPADA</div><h1 id="winnerTitle" style="font-size:32px;color:#b77913;margin:8px 0">TIM MERAH</h1><p id="winnerText">Kalian berhasil menjadi juara!</p><div class="row" style="justify-content:center;margin-top:18px"><button class="green" id="closeWinner">Lihat Hasil</button><button class="secondary" id="winnerAgain">Main Lagi</button></div></div></div>
+<script>
+const $=id=>document.getElementById(id);
+const sampleQuestions=[
+["Apa kepanjangan dari CPU?","Central Processing Unit","Computer Personal Unit","Central Program Utility","Control Processing User",0],
+["Perangkat yang menjadi otak komputer adalah ...","Monitor","Keyboard","Processor","Mouse",2],
+["Manakah contoh perangkat input?","Printer","Monitor","Speaker","Keyboard",3],
+["Bilangan biner hanya menggunakan angka ...","0 dan 1","1 dan 2","0 sampai 9","A sampai F",0],
+["Hasil konversi desimal 10 ke biner adalah ...","1001","1010","1100","1110",1],
+["Aplikasi untuk menjelajah internet disebut ...","Browser","Spreadsheet","Compiler","Calculator",0],
+["Perangkat untuk menghubungkan komputer ke jaringan adalah ...","Scanner","Webcam","Kartu jaringan","Speaker",2],
+["Informasi yang ditinggalkan saat beraktivitas di internet disebut ...","Jejak digital","Folder","Cache fisik","Perangkat lunak",0],
+["Rumus spreadsheet untuk menjumlahkan data adalah ...","COUNT","SUM","MAX","LEFT",1],
+["Sikap tepat saat menerima pesan mencurigakan adalah ...","Menyebarkan","Membalas semua data","Memeriksa sumbernya","Membagikan kata sandi",2],
+["Urutan langkah logis untuk menyelesaikan masalah disebut ...","Algoritma","Jaringan","Perangkat keras","Ikon",0],
+["Contoh sistem operasi adalah ...","Microsoft Word","Windows","Google Chrome","PowerPoint",1],
+["Satuan data yang lebih besar dari kilobyte adalah ...","Bit","Byte","Megabyte","Nibble",2],
+["Fungsi utama RAM adalah ...","Menyimpan data sementara","Mencetak dokumen","Menampilkan gambar","Menghubungkan listrik",0],
+["Dalam flowchart, simbol belah ketupat berarti ...","Mulai/selesai","Proses","Keputusan","Dokumen",2]
+];
+let bank=sampleQuestions.map((q,i)=>({id:i+1,q:q[0],opts:q.slice(1,5),correct:q[5]}));
+let teams={red:[],blue:[]},scores={red:0,blue:0},stats={},turnOrder=[],turnIndex=0,questionOrder=[],qIndex=0,answered=false,secondsLeft=15,timer=null,playing=false,sound=true,round=0;
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function shuffle(a){let b=[...a];for(let i=b.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+function beep(freq=550,dur=.12){if(!sound)return;try{let c=new(window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=freq;g.gain.value=.07;o.start();o.stop(c.currentTime+dur)}catch(e){}}
+function tab(name){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===name));}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>tab(b.dataset.tab));
+$('soundBtn').onclick=()=>{sound=!sound;$('soundBtn').textContent=sound?'🔊 Suara':'🔇 Suara mati'};
+$('fullscreenBtn').onclick=()=>{if(!document.fullscreenElement)document.documentElement.requestFullscreen?.();else document.exitFullscreen?.()};
+$('sampleStudents').onclick=()=>{$('students').value=Array.from({length:32},(_,i)=>`Siswa ${String(i+1).padStart(2,'0')}`).join('\n')};
+$('randomizeBtn').onclick=()=>{let names=$('students').value.split(/\n|,/).map(x=>x.trim()).filter(Boolean);if(names.length<2){alert('Masukkan minimal 2 nama siswa.');return}let mixed=shuffle(names);teams={red:[],blue:[]};mixed.forEach((n,i)=>teams[i%2?'blue':'red'].push(n));renderTeams();};
+function renderTeams(){
+ $('redMembersTotal').textContent=`(${teams.red.length})`;$('blueMembersTotal').textContent=`(${teams.blue.length})`;
+ $('redMembers').innerHTML=teams.red.map(n=>`<span class="member">${escapeHtml(n)}</span>`).join('')||'<span class="muted">Belum ada anggota</span>';
+ $('blueMembers').innerHTML=teams.blue.map(n=>`<span class="member">${escapeHtml(n)}</span>`).join('')||'<span class="muted">Belum ada anggota</span>';
+ $('redCount').textContent=teams.red.length+' anggota';$('blueCount').textContent=teams.blue.length+' anggota';
+ $('redAvatars').innerHTML=teams.red.slice(0,8).map((_,i)=>`<span class="avatar" title="Anggota tim">🧑🏻‍🎓</span>`).join('');
+ $('blueAvatars').innerHTML=teams.blue.slice(0,8).map((_,i)=>`<span class="avatar" title="Anggota tim">👩🏻‍🎓</span>`).join('');
+}
+$('addQuestion').onclick=()=>{let q=$('newQuestion').value.trim(),opts=[$('optA').value.trim(),$('optB').value.trim(),$('optC').value.trim(),$('optD').value.trim()];if(!q||opts.some(x=>!x)){alert('Lengkapi pertanyaan dan keempat pilihan jawaban.');return}bank.push({id:Date.now(),q,opts,correct:+$('correct').value});['newQuestion','optA','optB','optC','optD'].forEach(id=>$(id).value='');renderBank()};
+$('restoreQuestions').onclick=()=>{bank=sampleQuestions.map((q,i)=>({id:i+1,q:q[0],opts:q.slice(1,5),correct:q[5]}));renderBank()};
+function renderBank(){$('bankCount').textContent=bank.length;$('questionBank').innerHTML=bank.map((q,i)=>`<div style="padding:8px 0;border-bottom:1px solid #e7edf5;display:flex;gap:8px;align-items:center"><span style="flex:1;font-size:12px"><b>${i+1}.</b> ${escapeHtml(q.q)}</span><button class="secondary small" onclick="removeQuestion(${q.id})">Hapus</button></div>`).join('')||'<p class="muted">Belum ada soal.</p>'}
+window.removeQuestion=id=>{bank=bank.filter(q=>q.id!==id);renderBank()};
+function startGame(){
+ if(!teams.red.length||!teams.blue.length){alert('Acak pembagian tim terlebih dahulu.');tab('teacher');return}
+ if(!bank.length){alert('Bank soal masih kosong.');return}
+ clearInterval(timer);scores={red:0,blue:0};stats={};[...teams.red.map(n=>[n,'red']),...teams.blue.map(n=>[n,'blue'])].forEach(([n,t])=>stats[n]={team:t,correct:0,attempts:0});
+ turnOrder=[];let max=Math.max(teams.red.length,teams.blue.length);for(let i=0;i<max;i++){if(teams.red[i])turnOrder.push({name:teams.red[i],team:'red'});if(teams.blue[i])turnOrder.push({name:teams.blue[i],team:'blue'})}
+ turnOrder=shuffle(turnOrder);turnIndex=0;let lim=$('questionLimit').value;let count=lim==='all'?bank.length:Math.min(+lim,bank.length);questionOrder=shuffle(bank).slice(0,count);qIndex=0;round=0;playing=true;answered=false;$('targetDisplay').textContent=(Math.max(10,+$('target').value||50))+' poin';$('target').value=Math.max(10,+$('target').value||50);$('seconds').value=Math.max(5,+$('seconds').value||15);renderScore();renderTurnQueue();tab('game');showQuestion();
+}
+$('startBtn').onclick=startGame;$('resetBtn').onclick=()=>{clearInterval(timer);playing=false;answered=false;scores={red:0,blue:0};qIndex=0;turnIndex=0;renderScore();$('questionText').textContent='Pertandingan direset. Silakan mulai kembali.';$('answers').innerHTML='';$('feedback').textContent='';$('timer').textContent='⏱ --';$('nextBtn').disabled=true;$('skipBtn').disabled=true;};
+function renderScore(){$('redScore').textContent=scores.red;$('blueScore').textContent=scores.blue;$('resultRed').textContent=scores.red;$('resultBlue').textContent=scores.blue;$('resultRedCorrect').textContent=Object.values(stats).filter(s=>s.team==='red').reduce((a,s)=>a+s.correct,0)+' jawaban benar';$('resultBlueCorrect').textContent=Object.values(stats).filter(s=>s.team==='blue').reduce((a,s)=>a+s.correct,0)+' jawaban benar';let p=scores.red-scores.blue,shift=Math.max(-35,Math.min(35,p*0.7));$('rope').style.transform=`translateX(${shift}px)`;$('ropeLabel').textContent=p===0?'POSISI SEIMBANG':p>0?'MERAH UNGGUL':'BIRU UNGGUL';}
+function renderTurnQueue(){let upcoming=turnOrder.slice(turnIndex,turnIndex+8);$('turnQueue').innerHTML=upcoming.map((p,i)=>`<span class="member ${i===0?'active':''}">${p.team==='red'?'🔴':'🔵'} ${escapeHtml(p.name)}</span>`).join('');}
+function showQuestion(){
+ if(qIndex>=questionOrder.length){finishGame(null,'Semua soal telah selesai!');return}
+ if(turnIndex>=turnOrder.length)turnIndex=0;
+ answered=false;let p=turnOrder[turnIndex],q=questionOrder[qIndex];round++;
+ $('roundLabel').textContent=`${$('className').value||'Pertandingan'} · Babak ${round}`;
+ $('turnLabel').textContent='Giliran '+p.name;$('currentPlayer').textContent=p.name;$('currentTeam').textContent=p.team==='red'?'🔴 Tim Merah':'🔵 Tim Biru';
+ $('teamTurn').textContent=p.team==='red'?'🔴 GILIRAN TIM MERAH':'🔵 GILIRAN TIM BIRU';$('teamTurn').style.background=p.team==='red'?'#ffe4e7':'#e2efff';$('qCounter').textContent=`Soal ${qIndex+1}/${questionOrder.length}`;
+ $('questionText').textContent=q.q;$('answers').innerHTML=q.opts.map((a,i)=>`<button class="answer" data-index="${i}"><b>${'ABCD'[i]}.</b> ${escapeHtml(a)}</button>`).join('');
+ $('answers').querySelectorAll('button').forEach(b=>b.onclick=()=>answer(+b.dataset.index));
+ $('feedback').textContent='Pilih jawaban yang menurutmu benar.';$('nextBtn').disabled=true;$('skipBtn').disabled=false;
+ secondsLeft=Math.max(5,+$('seconds').value||15);showTimer();clearInterval(timer);timer=setInterval(()=>{secondsLeft--;showTimer();if(secondsLeft<=0){clearInterval(timer);if(!answered)answer(-1,true)}},1000);
+ renderTurnQueue();renderScore();
+}
+function showTimer(){$('timer').textContent='⏱ '+secondsLeft+' detik';$('timer').classList.toggle('urgent',secondsLeft<=5)}
+function answer(index,timeout=false){
+ if(answered||!playing)return;answered=true;clearInterval(timer);let q=questionOrder[qIndex],p=turnOrder[turnIndex],buttons=[...$('answers').querySelectorAll('button')];buttons.forEach((b,i)=>{b.disabled=true;if(i===q.correct)b.classList.add('correct');if(i===index&&i!==q.correct)b.classList.add('wrong')});
+ stats[p.name].attempts++;
+ if(index===q.correct){scores[p.team]+=10;stats[p.name].correct++;$('feedback').textContent='🎉 BENAR! Tim '+(p.team==='red'?'Merah':'Biru')+' mendapat +10 poin tarikan!';$('feedback').style.color='#078653';beep(780,.2)}
+ else{$('feedback').textContent=timeout?'⏰ Waktu habis! Tidak ada poin tarikan.':'Belum tepat. Jawaban benar: '+ 'ABCD'[q.correct]+'. Tidak ada poin tarikan.';$('feedback').style.color='#c43c4c';beep(220,.2)}
+ $('nextBtn').disabled=false;$('skipBtn').disabled=true;renderScore();updateResults();
+ let target=Math.max(10,+$('target').value||50);if(scores[p.team]>=target){finishGame(p.team,'Target '+target+' poin berhasil dicapai!')}
+}
+$('nextBtn').onclick=()=>{if(!answered)return;qIndex++;turnIndex++;showQuestion()};
+$('skipBtn').onclick=()=>{if(answered)return;clearInterval(timer);answered=true;$('feedback').textContent='Soal dilewati. Tidak ada poin tarikan.';$('nextBtn').disabled=false;$('skipBtn').disabled=true;$('answers').querySelectorAll('button').forEach(b=>b.disabled=true)};
+function finishGame(winner,message){playing=false;clearInterval(timer);$('nextBtn').disabled=true;$('skipBtn').disabled=true;if(winner){$('winnerTitle').textContent=winner==='red'?'🔴 TIM MERAH':'🔵 TIM BIRU';$('winnerText').textContent=message;$('winnerModal').classList.add('show');beep(900,.35)}else{$('winnerTitle').textContent=scores.red===scores.blue?'HASIL IMBANG':scores.red>scores.blue?'🔴 TIM MERAH':'🔵 TIM BIRU';$('winnerText').textContent=message+' Skor akhir: Merah '+scores.red+' — Biru '+scores.blue;$('winnerModal').classList.add('show')}updateResults()}
+$('closeWinner').onclick=()=>{$('winnerModal').classList.remove('show');tab('results')};$('winnerAgain').onclick=()=>{$('winnerModal').classList.remove('show');startGame()};$('playAgainBtn').onclick=()=>{startGame()};
+function updateResults(){
+ $('resultRows').innerHTML=Object.entries(stats).sort((a,b)=>b[1].correct-a[1].correct).map(([n,s])=>`<tr><td>${escapeHtml(n)}</td><td>${s.team==='red'?'🔴 Merah':'🔵 Biru'}</td><td>${s.correct}</td><td>${s.attempts}</td><td>${s.attempts?Math.round(s.correct/s.attempts*100):0}%</td></tr>`).join('')||'<tr><td colspan="5" class="muted">Belum ada data pertandingan.</td></tr>';
+ $('resultRed').textContent=scores.red;$('resultBlue').textContent=scores.blue;
+}
+$('exportBtn').onclick=()=>{let rows=[['Nama','Tim','Jawaban benar','Kesempatan','Akurasi'],...Object.entries(stats).map(([n,s])=>[n,s.team==='red'?'Merah':'Biru',s.correct,s.attempts,s.attempts?Math.round(s.correct/s.attempts*100)+'%':'0%'])];let csv=rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='hasil-tug-of-war.csv';a.click();URL.revokeObjectURL(a.href)};
+$('students').value='Andi\nBudi\nCitra\nDewi\nEko\nFitri\nGalih\nHana\nIndra\nJihan\nKevin\nLala';
+renderTeams();renderBank();renderScore();updateResults();
+</script>
+</body>
+</html>
